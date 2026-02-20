@@ -65,7 +65,7 @@ to what fraction is picked for train/devel/test.""",
 @click.option(
     "--n_workers",
     type=int,
-    default=4,
+    default=2,
     help="""The number of workers to be used during the
 data_preprocessing loading process.""",
 )
