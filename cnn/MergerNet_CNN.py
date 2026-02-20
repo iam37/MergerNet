@@ -6,6 +6,7 @@ import torch.optim as optim
 from torchvision import transforms, datasets
 from ignite.engine import Engine, Events
 from ignite.metrics import Accuracy, Recall, Precision, Fbeta, confusion_matrix, ConfusionMatrix, EpochMetric
+import torch.nn.functional as F
 
 class BasicBlock(nn.Module):
     expansion = 1
