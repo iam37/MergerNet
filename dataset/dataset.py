@@ -169,7 +169,7 @@ class FITSDataset(Dataset):
             raise e
 
         # Replace NaNs with the specified value
-        fits_np = np.nan_to_num(fits_np, nan=0)
+        #fits_np = np.nan_to_num(fits_np, nan=0)
 
         tensor = torch.from_numpy(fits_np.astype(np.float32))
         if device == 'cuda':

@@ -14,7 +14,7 @@ def arsinh_normalize(X):
     normalized[torch.isinf(normalized)] = 255
     return normalized
 
-def load_tensor(filename, tensors_path, device="cpu", as_numpy=False):
+def load_tensor(filename, tensors_path, device="gpu", as_numpy=False):
     """Load a Torch tensor from disk."""
     try:
         tensor = torch.load(tensors_path / (filename + ".pt"), map_location=device)
