@@ -11,7 +11,7 @@ def model_stats(model):
 
 def model_factory(model_name):
     if model_name.lower() == 'mergernet':
-        return DRAGON
+        return MergerNet
     elif model_name.lower() == 'resnet':
         return ResNet
     else:
