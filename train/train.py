@@ -42,11 +42,11 @@ So this variable should be specified accordingly""",
     "--model_type",
     type=click.Choice(
         [
-            "dragon"
+            "MergerNet"
         ],
         case_sensitive=False,
     ),
-    default="dragon",
+    default="MergerNet",
 )
 @click.option("--model_state", type=click.Path(exists=True), default=None)
 @click.option("--data_dir", type=click.Path(exists=True), required=True)
