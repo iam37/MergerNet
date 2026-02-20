@@ -116,6 +116,12 @@ class FITSDataset(Dataset):
             self.observations = list(
                 tqdm(p.imap(load_fn, filepaths), total=n)
             )
+
+        p.close()
+        p.join()
+        del p
+        gc.collect()
+
         logging.info("Initialization of FITS Dataset Completed.")
 
         self.sampler = None
