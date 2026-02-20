@@ -13,7 +13,7 @@ import torch.optim as opt
 
 import kornia.augmentation as K
 
-from data_preprocessing import FITSDataset, get_data_loader
+from dataset import FITSDataset, get_data_loader
 from cnn import model_factory, model_stats, save_trained_model
 from create_trainer import create_trainer, create_transfer_learner
 from utils import discover_devices, specify_dropout_rate
