@@ -163,7 +163,7 @@ class FITSDataset(Dataset):
     def load_fits_as_tensor(filename, device="cpu"):
         """Open a FITS file and convert it to a Torch tensor."""
         try:
-            fits_np = fits.getdata(filename, memmap=False)
+            fits_np = fits.getdata(filename, memmap=True)
         except OSError as e:
             logging.error(f"ERROR: {filename} is empty or corrupted. Shutting down")
             raise e
