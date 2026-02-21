@@ -194,7 +194,7 @@ def train(**kwargs):
         get_data_loader,
         batch_size=args["batch_size"],
         #n_workers=args["n_workers"],
-        n_workers = 0
+        n_workers = 1
     )
 
     # Select the desired transforms
