@@ -193,8 +193,8 @@ def train(**kwargs):
     loader_factory = partial(
         get_data_loader,
         batch_size=args["batch_size"],
-        #n_workers=args["n_workers"],
-        n_workers = 1
+        n_workers=args["n_workers"],
+        #n_workers = 1
     )
 
     # Select the desired transforms
