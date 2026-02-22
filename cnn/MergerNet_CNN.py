@@ -143,7 +143,7 @@ class MergerNet(nn.Module):
 # Simple CNN to see if ResNet architecture performs better.
 class MergerCNN(nn.Module): # based on the DRAGON_CNN architecture
     def __init__(self, cutout_size=200, channels=1, num_classes=3):
-        super(DRAGON, self).__init__()
+        super(MergerCNN, self).__init__()
         self.cutout_size = cutout_size
         self.channels = channels
         self.expected_input_shape = (
