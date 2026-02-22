@@ -1,6 +1,6 @@
 import torch
 from pathlib import Path
-from .MergerNet_CNN import MergerNet
+from .MergerNet_CNN import MergerNet, MergerCNN
 from .resnet import ResNet
 
 
@@ -14,6 +14,8 @@ def model_factory(model_name):
         return MergerNet
     elif model_name.lower() == 'resnet':
         return ResNet
+    elif model_name.lower() == "merger_cnn":
+        return MergerCNN
     else:
         raise ValueError(f"Invalid model name: {model_name}")
 
