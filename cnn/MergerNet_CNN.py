@@ -206,10 +206,26 @@ class MergerCNN(nn.Module): # based on the DRAGON_CNN architecture
             nn.MaxPool2d(kernel_size=2, stride=2)
         )
 
-        self.fc1 = nn.Linear(2048, 1024)
+        self.flattened_size = self._get_flattened_size()
+        
+        # Fully connected layers with correct input size
+        self.fc1 = nn.Linear(self.flattened_size, 1024)
         self.drop = nn.Dropout(0.5)
         self.fc2 = nn.Linear(1024, num_classes)
 
+    def _get_flattened_size(self):
+        """Calculate the flattened feature size after conv layers"""
+        with torch.no_grad():
+            dummy_input = torch.zeros(1, self.channels, self.cutout_size, self.cutout_size)
+            x = self.layer1(dummy_input)
+            x = self.layer2(x)
+            x = self.layer3(x)
+            x = self.layer4(x)
+            x = self.layer5(x)
+            x = self.layer6(x)
+            x = self.layer7(x)
+            x = self.layer8(x)
+            return x.view(1, -1).size(1)
     def forward(self, x):
         # Forward pass through the layers
         out = self.layer1(x)
