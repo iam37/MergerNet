@@ -160,7 +160,7 @@ class FITSDataset(Dataset):
                 if pt.shape[-1] == self.channels:  # If channels are last [H, W, C]
                     pt = pt.permute(2, 0, 1)  # Make it [C, H, W]
     
-            # ✅ Don't squeeze here!
+            # Don't squeeze here!
             return pt, label  # Return [C, H, W], not squeezed
         else:
             raise TypeError(f"Invalid argument type: {type(index)}")
