@@ -110,17 +110,17 @@ class FITSDataset(Dataset):
         filepaths = [fl.replace('/', '_') if '/' in fl else fl for fl in self.filenames]  # Flatten
         load_fn = partial(load_tensor, tensors_path=self.tensors_path)
         self.observations = []
-        #for i, filepath in enumerate(tqdm(filepaths, desc="Loading tensors")):
-        #    # Load tensor
-        #    tensor = load_tensor(filepath, tensors_path=self.tensors_path)
-        #    self.observations.append(tensor)
+        for i, filepath in enumerate(tqdm(filepaths, desc="Loading tensors")):
+            # Load tensor
+            tensor = load_tensor(filepath, tensors_path=self.tensors_path)
+            self.observations.append(tensor)
 
-        with mp.Pool(min(n_workers, mp.cpu_count())) as p:
-            # Load to NumPy, then convert to PyTorch (hack to solve system
-            # issue with multiprocessing + PyTorch tensors)
-            self.observations = list(
-                tqdm(p.imap(load_fn, filepaths), total=n)
-            )
+        #with mp.Pool(min(n_workers, mp.cpu_count())) as p:
+        #    # Load to NumPy, then convert to PyTorch (hack to solve system
+        #    # issue with multiprocessing + PyTorch tensors)
+        #    self.observations = list(
+        #        tqdm(p.imap(load_fn, filepaths), total=n)
+        #    )
 
         logging.info("Initialization of FITS Dataset Completed.")
 
