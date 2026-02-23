@@ -153,8 +153,15 @@ class FITSDataset(Dataset):
             if self.normalize:
                 pt = arsinh_normalize(pt)
 
-            #return pt.squeeze(1), label
-            return pt, label
+            if pt.ndim == 2:  # If shape is [H, W]
+                pt = pt.unsqueeze(0)  # Make it [1, H, W]
+            elif pt.ndim == 3 and pt.shape[0] != self.channels:
+                # If shape is wrong, fix it
+                if pt.shape[-1] == self.channels:  # If channels are last [H, W, C]
+                    pt = pt.permute(2, 0, 1)  # Make it [C, H, W]
+    
+            # ✅ Don't squeeze here!
+            return pt, label  # Return [C, H, W], not squeezed
         else:
             raise TypeError(f"Invalid argument type: {type(index)}")
 
