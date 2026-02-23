@@ -153,7 +153,8 @@ class FITSDataset(Dataset):
             if self.normalize:
                 pt = arsinh_normalize(pt)
 
-            return pt.squeeze(1), label
+            #return pt.squeeze(1), label
+            return pt, label
         else:
             raise TypeError(f"Invalid argument type: {type(index)}")
 

@@ -199,7 +199,6 @@ def train(**kwargs):
     )
 
     # Select the desired transforms
-    T = None
     #if args["crop"]:
     #    T = [K.CenterCrop(args["cutout_size"]),
     #        K.RandomHorizontalFlip(),
