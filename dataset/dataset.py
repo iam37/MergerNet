@@ -23,6 +23,18 @@ import logging
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 mp.set_sharing_strategy("file_system")
 
+def crop_center(img, cropx, cropy):
+    
+    #Function from 
+    #https://stackoverflow.com/questions/39382412/crop-center-portion-of-a-numpy-image
+    
+    y, x, *_ = img.shape
+    startx = x // 2 - (cropx // 2)
+    #print(startx)
+    starty = y // 2 - (cropy // 2) 
+    #print(starty)
+    return img[starty:starty + cropy, startx:startx + cropx, ...]
+
 
 class FITSDataset(Dataset):
     """Dataset from FITS files. Pre-caches FITS files as PyTorch tensors to
@@ -34,7 +46,7 @@ class FITSDataset(Dataset):
         label_col="classes",
         slug=None,  # a slug is a human readable ID
         split=None,  # splits are defined in make_split.py file.
-        cutout_size=94,
+        cutout_size=150,
         normalize=False,  # Whether labels will be normalized.
         transforms=None,  # Supports a list of transforms or a single transform func.
         channels=1,
@@ -56,7 +68,8 @@ class FITSDataset(Dataset):
         device = discover_devices()
 
         # Initializing cutout shape, assuming the shape is roughly square-like.
-        self.cutout_shape = (channels, cutout_size, cutout_size)
+        self.cutout_size = cutout_size
+        self.cutout_shape = (channels, self.cutout_size, self.cutout_size)
 
         # Set requested transforms
         self.normalize = normalize
@@ -178,6 +191,7 @@ class FITSDataset(Dataset):
         """Open a FITS file and convert it to a Torch tensor."""
         try:
             fits_np = fits.getdata(filename, memmap=True)
+            fits_np = crop_center(fits_np, self.cutout_size, self.cutout_size)
         except OSError as e:
             logging.error(f"ERROR: {filename} is empty or corrupted. Shutting down")
             raise e
