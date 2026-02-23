@@ -17,6 +17,7 @@ from dataset import FITSDataset, get_data_loader
 from cnn import model_factory, model_stats, save_trained_model
 from create_trainer import create_trainer, create_transfer_learner
 from utils import discover_devices, specify_dropout_rate
+from train_utils import GPUAugmentation
 
 
 import random
@@ -199,11 +200,23 @@ def train(**kwargs):
 
     # Select the desired transforms
     T = None
+    #if args["crop"]:
+    #    T = [K.CenterCrop(args["cutout_size"]),
+    #        K.RandomHorizontalFlip(),
+    #        K.RandomVerticalFlip(),
+    #        K.RandomRotation(360)]
+    T = None
+    gpu_aug = None
     if args["crop"]:
-        T = [K.CenterCrop(args["cutout_size"]),
-            K.RandomHorizontalFlip(),
-            K.RandomVerticalFlip(),
-            K.RandomRotation(360)]
+        logging.info("Creating GPU augmentation pipeline...")
+        gpu_aug = nn.Sequential(
+            K.CenterCrop((args["cutout_size"], args["cutout_size"])),
+            K.RandomHorizontalFlip(p=0.5),
+            K.RandomVerticalFlip(p=0.5),
+            K.RandomRotation(degrees=360.0, p=0.5),
+        ).to(args["device"])
+        logging.info("GPU augmentation enabled")
+        
 
     # Generate the DataLoaders and log the train/devel/test split sizes
     splits = ("train", "devel", "test")
