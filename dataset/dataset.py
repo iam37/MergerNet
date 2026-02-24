@@ -53,7 +53,7 @@ class FITSDataset(Dataset):
         load_labels=True,
         num_classes=None,
         force_reload=False,
-        n_workers=1,
+        n_workers=0,
         expand_factor=1
     ):
         # Set data_preprocessing directories
@@ -114,7 +114,7 @@ class FITSDataset(Dataset):
                     load_path = self.data_dir / filename
 
                 # Loading and saving tensor to flattened name.
-                t = FITSDataset.load_fits_as_tensor(load_path, device)
+                t = FITSDataset.load_fits_as_tensor(load_path, self.cutout_size, device)
                 torch.save(t, filepath)
 
         # If instead the files are loaded, preload the tensors!
@@ -187,11 +187,11 @@ class FITSDataset(Dataset):
         return self.sampler
 
     @staticmethod
-    def load_fits_as_tensor(filename, device="cpu"):
+    def load_fits_as_tensor(filename, cutout_size, device="cpu"):
         """Open a FITS file and convert it to a Torch tensor."""
         try:
             fits_np = fits.getdata(filename, memmap=True)
-            fits_np = crop_center(fits_np, self.cutout_size, self.cutout_size)
+            fits_np = crop_center(fits_np, cutout_size, cutout_size)
         except OSError as e:
             logging.error(f"ERROR: {filename} is empty or corrupted. Shutting down")
             raise e
