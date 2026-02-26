@@ -197,19 +197,19 @@ class MergerCNN(nn.Module): # based on the DRAGON_CNN architecture
             nn.Conv2d(384, 384, kernel_size=3, padding='same'),
             nn.BatchNorm2d(384),
             nn.LeakyReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2)
+            nn.AvgPool2d(kernel_size=2, stride=1)
         )
         self.layer8 = nn.Sequential(
             nn.Conv2d(384, 512, kernel_size=3, padding='same'),
             nn.BatchNorm2d(512),
             nn.LeakyReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2)
+            nn.AvgPool2d(kernel_size=2, stride=1)
         )
 
-        self.flattened_size = self._get_flattened_size()
+        self.global_avg_pool = nn.AdaptiveAvgPool2d((1, 1))
         
         # Fully connected layers with correct input size
-        self.fc1 = nn.Linear(self.flattened_size, 1024)
+        self.fc1 = nn.Linear(512, 1024)
         self.drop = nn.Dropout(0.5)
         self.fc2 = nn.Linear(1024, num_classes)
 
@@ -238,7 +238,9 @@ class MergerCNN(nn.Module): # based on the DRAGON_CNN architecture
         out = self.layer8(out)
 
         # Flatten the output tensor
-        out = out.view(out.size(0), -1)
+        out = self.global_avg_pool(out)  # Shape: [batch, 512, 1, 1]
+        
+        out = out.view(out.size(0), -1)  # Shape: [batch, 512]
 
         # Fully connected layers
         out = self.fc1(out)
