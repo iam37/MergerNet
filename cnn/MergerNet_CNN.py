@@ -71,7 +71,7 @@ class Bottleneck(nn.Module):
             return out
         
 class ResNet(nn.Module):
-    def __init__(self, block, num_blocks, in_channel=3, zero_init_residual=False):
+    def __init__(self, block, num_blocks, num_classes, in_channel=3, zero_init_residual=False):
         super(ResNet, self).__init__()
         self.in_planes = 64
 
@@ -131,8 +131,9 @@ class MergerNet(nn.Module):
         self.cutout_size = cutout_size
         self.channels = channels
         self.expected_input_shape = (16, self.channels, self.cutout_size, self.cutout_size)
+        self.num_classes = num_classes
             
-        self.backbone = ResNet(block=BasicBlock, num_blocks=[2, 2, 2, 2], in_channel=channels, zero_init_residual=True) #Re12snet18 outputs 5
+        self.backbone = ResNet(block=BasicBlock, num_blocks=[2, 2, 2, 2], self.num_classes, in_channel=channels, zero_init_residual=True) #Re12snet18 outputs 5
         #self.fc1 = nn.Linear(2048, 1024)
         
         nn.init.normal_(self.fc.weight, mean=0.0, std=0.01)
