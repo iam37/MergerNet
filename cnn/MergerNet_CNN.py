@@ -136,8 +136,8 @@ class MergerNet(nn.Module):
         self.backbone = ResNet(block=BasicBlock, num_blocks=[2, 2, 2, 2], num_classes = self.num_classes, in_channel=channels, zero_init_residual=True) #Re12snet18 outputs 5
         #self.fc1 = nn.Linear(2048, 1024)
         
-        nn.init.normal_(self.fc.weight, mean=0.0, std=0.01)
-        nn.init.constant_(self.fc.bias, 0)
+        #nn.init.normal_(self.fc.weight, mean=0.0, std=0.01)
+        #nn.init.constant_(self.fc.bias, 0)
         
     def forward(self, x):
         out = self.backbone(x)
