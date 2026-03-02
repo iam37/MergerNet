@@ -86,6 +86,7 @@ class ResNet(nn.Module):
         self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.drop2 = nn.Dropout(0.4)
+        self.fc = nn.Linear(512*block.expansion, num_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -117,7 +118,10 @@ class ResNet(nn.Module):
         out = self.layer3(out)
         out = self.layer4(out)
         out = self.avgpool(out)
-        out = torch.flatten(out, 1)
+        #out = torch.flatten(out, 1)
+        out = self.drop2(out)
+        out = self.fc(out)
+        
         return out
     
 
@@ -130,16 +134,12 @@ class MergerNet(nn.Module):
             
         self.backbone = ResNet(block=BasicBlock, num_blocks=[2, 2, 2, 2], in_channel=channels, zero_init_residual=True) #Re12snet18 outputs 5
         #self.fc1 = nn.Linear(2048, 1024)
-        self.drop = nn.Dropout(0.5)
-        self.fc = nn.Linear(512, num_classes)
         
         nn.init.normal_(self.fc.weight, mean=0.0, std=0.01)
         nn.init.constant_(self.fc.bias, 0)
         
     def forward(self, x):
-        features = self.backbone(x)
-        
-        out = self.fc(features)
+        out = self.backbone(x)
         
         return out
     
