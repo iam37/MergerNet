@@ -18,6 +18,7 @@ from cnn import model_factory, model_stats, save_trained_model
 from create_trainer import create_trainer, create_transfer_learner
 from utils import discover_devices, specify_dropout_rate
 from train_utils import GPUAugmentation
+from ignite.handling import EarlyStopping
 
 
 import random
@@ -140,6 +141,41 @@ data is augmented""",
     "--scheduler/--no_scheduler",
     default=True
 )
+@click.option("--early-stopping/no-early-stopping", default = True)
+@click.option("--early_stopping_patience", type=int, default=3, help="Number of epochs with reducing training metrics that are allowed before the model stops early")
+
+def score_function(engine):
+    """
+    Returns the metric to monitor. 
+    Higher is better, so negate loss or use accuracy.
+    """
+    # Option 1: Use validation loss (negate because lower is better)
+    val_loss = engine.state.metrics.get('loss', float('inf'))
+    return -val_loss
+    
+    # Option 2: Use validation accuracy (higher is better)
+    # return engine.state.metrics.get('accuracy', 0.0)
+
+def create_early_stopping_handler(trainer, evaluator, patience=3):
+    """
+    Create early stopping handler that stops if metrics don't improve.
+    
+    Args:
+        trainer: The training engine
+        evaluator: The evaluation engine (has the metrics)
+        patience: Number of epochs without improvement before stopping
+    """
+    handler = EarlyStopping(
+        patience=patience,
+        score_function=score_function,
+        trainer=trainer  # This is what gets stopped
+    )
+    
+    # Attach to evaluator - checks after each validation
+    evaluator.add_event_handler(Events.COMPLETED, handler)
+    
+    return handler
+
 def train(**kwargs):
     """Runs the training procedure using MLFlow."""
 
@@ -282,6 +318,10 @@ def train(**kwargs):
             trainer = create_transfer_learner(
                 model, optimizer, criterion, loaders, args["device"], args["scheduler"]
             )
+        if args.get("early-stopping", True): 
+            patience = args.get("early_stopping_patience", 3)
+            logging.info(f"Early stopping enabled with patience={patience}")
+            early_stopping = EarlyStopping(patience=patience, score_function=lambda engine: -engine.state.metrics['devel_loss'], trainer=trainer)
 
         # Run trainer and save model state
         trainer.run(loaders["train"], max_epochs=args["epochs"])

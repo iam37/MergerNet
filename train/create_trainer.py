@@ -92,6 +92,22 @@ def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=T
         for L, loader in loaders.items():
             log_metrics(trainer, loader, log_prefix=f"{L}_")
         wandb.log({"lr": get_current_lr(optimizer)})
+    
+    @trainer.on(Events.EPOCH_COMPLETED)
+    def run_validation(engine):
+        evaluator.run(loaders['devel'])
+    
+    early_stopping = EarlyStopping(
+        patience=3,
+        score_function=lambda engine: -engine.state.metrics['loss'],
+        trainer=trainer
+    )
+    evaluator.add_event_handler(Events.COMPLETED, early_stopping)
+    
+    # Log when early stopping triggers
+    @trainer.on(Events.TERMINATE)
+    def log_early_stop(engine):
+        logging.info(f"Early stopping triggered at epoch {engine.state.epoch}")
 
     @trainer.on(Events.ITERATION_COMPLETED)
     def clip_gradients(engine):
@@ -107,7 +123,7 @@ def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=T
         logging.info("Terminating run explicitly.")
         trainer.terminate()
 
-    return trainer
+    return trainer, evaluator
 
 
 def create_transfer_learner(model, optimizer, criterion, loaders, device):
