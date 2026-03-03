@@ -14,7 +14,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.optim.lr_scheduler import LinearLR, SequentialLR
 from ignite.handlers import EarlyStopping
 
-def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=True):
+def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=True, early_stopping = False, early_stopping_parameter = 8):
     """Set up Ignite trainer and evaluator."""
     trainer = create_supervised_trainer(
         model, optimizer, criterion, device=device
@@ -100,7 +100,7 @@ def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=T
         evaluator.run(loaders['devel'])
     
     early_stopping = EarlyStopping(
-        patience=3,
+        patience=8,
         score_function=lambda engine: -engine.state.metrics['loss'],
         trainer=trainer
     )
