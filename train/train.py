@@ -141,7 +141,7 @@ data is augmented""",
     "--scheduler/--no_scheduler",
     default=True
 )
-@click.option("--early-stopping/no-early-stopping", default = True)
+@click.option("--early-stopping/--no-early-stopping", default = True)
 @click.option("--early_stopping_patience", type=int, default=3, help="Number of epochs with reducing training metrics that are allowed before the model stops early")
 
 
