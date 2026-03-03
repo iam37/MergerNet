@@ -7,6 +7,7 @@ from ignite.engine import (
 )
 from ignite.metrics import Loss, Accuracy, Precision, ConfusionMatrix, Recall, Fbeta
 from ignite.contrib.handlers.param_scheduler import LRScheduler
+from ignite.contrib.handlers import CosineAnnealingScheduler
 import logging
 
 from torch.optim.lr_scheduler import CosineAnnealingLR
@@ -20,15 +21,15 @@ def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=T
     )
 
     if use_scheduler:
-        #torch_lr_scheduler = CosineAnnealingLR(optimizer, T_max=25)
+        torch_lr_scheduler = CosineAnnealingLR(optimizer, T_max=25)
         #scheduler = LRScheduler(torch_lr_scheduler)
-        warmup_scheduler = LinearLR(optimizer, start_factor=0.1, total_iters=5)
-        cosine_scheduler = CosineAnnealingLR(optimizer, T_max=25)
+        #warmup_scheduler = LinearLR(optimizer, start_factor=0.1, total_iters=5)
+        #cosine_scheduler = CosineAnnealingLR(optimizer, T_max=25)
 
-        torch_lr_scheduler = SequentialLR(
-            optimizer, 
-            schedulers=[warmup_scheduler, cosine_scheduler],
-            milestones=[5])
+        #torch_lr_scheduler = SequentialLR(
+        #    optimizer, 
+        #    schedulers=[warmup_scheduler, cosine_scheduler],
+        #    milestones=[5])
         scheduler = LRScheduler(torch_lr_scheduler)
 
     metrics = {
