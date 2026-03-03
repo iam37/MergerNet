@@ -182,6 +182,7 @@ def train(**kwargs):
     # Copy and log args
     #args = {k: v for k, v in kwargs.items()}
     args = {k.replace('-', '_'): v for k, v in kwargs.items()}
+    print(args)
 
     # Discover devices
     args["device"] = discover_devices()
