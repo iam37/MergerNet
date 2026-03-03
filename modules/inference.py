@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 from dataset import FITSDataset, get_data_loader
 import kornia.augmentation as K
+from collections import OrderedDict
 
 from cnn import model_factory
 from utils import (
@@ -64,9 +65,29 @@ def predict(
     # Load the model
     logging.info("Loading model...")
     if device == "cpu":
-        model.load_state_dict(torch.load(model_path, map_location="cpu"))
+        if parallel == False:
+            state_dict = torch.load(model_path)
+    
+            new_state_dict = OrderedDict()
+            for k, v in state_dict.items():
+                name = k[7:] if k.startswith('module.') else k  # remove 'module.' prefix
+                new_state_dict[name] = v
+    
+            model.load_state_dict(new_state_dict)
+        else:
+            model.load_state_dict(torch.load(model_path, map_location="cpu"))
     else:
-        model.load_state_dict(torch.load(model_path))
+        if parallel == False:
+            state_dict = torch.load(model_path)
+    
+            new_state_dict = OrderedDict()
+            for k, v in state_dict.items():
+                name = k[7:] if k.startswith('module.') else k  # remove 'module.' prefix
+                new_state_dict[name] = v
+    
+            model.load_state_dict(new_state_dict)
+        else:
+            model.load_state_dict(torch.load(model_path))
 
     # Create a data_preprocessing loader
     loader = get_data_loader(
