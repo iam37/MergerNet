@@ -7,7 +7,7 @@ import torch.nn as nn
 
 from tqdm import tqdm
 
-from data_preprocessing import FITSDataset, get_data_loader
+from dataset import FITSDataset, get_data_loader
 import kornia.augmentation as K
 
 from cnn import model_factory
