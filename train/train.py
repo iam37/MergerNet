@@ -144,37 +144,6 @@ data is augmented""",
 @click.option("--early-stopping/no-early-stopping", default = True)
 @click.option("--early_stopping_patience", type=int, default=3, help="Number of epochs with reducing training metrics that are allowed before the model stops early")
 
-def score_function(engine):
-    """
-    Returns the metric to monitor. 
-    Higher is better, so negate loss or use accuracy.
-    """
-    # Option 1: Use validation loss (negate because lower is better)
-    val_loss = engine.state.metrics.get('loss', float('inf'))
-    return -val_loss
-    
-    # Option 2: Use validation accuracy (higher is better)
-    # return engine.state.metrics.get('accuracy', 0.0)
-
-def create_early_stopping_handler(trainer, evaluator, patience=3):
-    """
-    Create early stopping handler that stops if metrics don't improve.
-    
-    Args:
-        trainer: The training engine
-        evaluator: The evaluation engine (has the metrics)
-        patience: Number of epochs without improvement before stopping
-    """
-    handler = EarlyStopping(
-        patience=patience,
-        score_function=score_function,
-        trainer=trainer  # This is what gets stopped
-    )
-    
-    # Attach to evaluator - checks after each validation
-    evaluator.add_event_handler(Events.COMPLETED, handler)
-    
-    return handler
 
 def train(**kwargs):
     """Runs the training procedure using MLFlow."""
