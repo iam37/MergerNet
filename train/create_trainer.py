@@ -11,6 +11,7 @@ import logging
 
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.optim.lr_scheduler import LinearLR, SequentialLR
+from ignite.handlers import EarlyStopping
 
 def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=True):
     """Set up Ignite trainer and evaluator."""
