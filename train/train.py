@@ -293,7 +293,7 @@ def train(**kwargs):
             patience = args.get("early_stopping_patience", 3)
             logging.info(f"Early stopping enabled with patience={patience}")
             early_stopping = EarlyStopping(patience=patience, score_function=lambda engine: -engine.state.metrics['devel_loss'], trainer=trainer)
-            evaluator.add_event_handler(Events.COMPLETED, early_stopping)
+            #evaluator.add_event_handler(Events.COMPLETED, early_stopping)
         # Run trainer and save model state
         trainer.run(loaders["train"], max_epochs=args["epochs"])
         slug = (
