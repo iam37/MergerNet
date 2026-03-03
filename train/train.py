@@ -282,8 +282,7 @@ def train(**kwargs):
         if args["train"]:
             logging.info("Creating trainer...")
             trainer, evaluator = create_trainer(
-                model, optimizer, criterion, loaders, args["device"], args["scheduler"], early_stopping = args['early-stopping'], early_stopping_parameter = args['early_stopping_patience']
-            )
+                model, optimizer, criterion, loaders, args["device"], args["scheduler"])
         else:
             logging.info("Creating trainer and freezing layers for transfer learning...")
             trainer = create_transfer_learner(
