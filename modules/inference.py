@@ -107,11 +107,11 @@ def predict(
     "--model_type",
     type=click.Choice(
         [
-            "dragon"
+            "MergerNet", "merger_cnn"
         ],
         case_sensitive=False,
     ),
-    default="dragon",
+    default="merger_cnn",
 )
 @click.option("--model_path", type=click.Path(exists=True), required=True)
 @click.option("--output_path", type=click.Path(writable=True), required=True)
