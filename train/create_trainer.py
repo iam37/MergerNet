@@ -14,7 +14,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.optim.lr_scheduler import LinearLR, SequentialLR
 from ignite.handlers import EarlyStopping
 
-def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=True, early_stopping = False, early_stopping_parameter = 8):
+def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=True, early_stopping_bool = False, early_stopping_parameter = 8):
     """Set up Ignite trainer and evaluator."""
     trainer = create_supervised_trainer(
         model, optimizer, criterion, device=device
@@ -98,18 +98,18 @@ def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=T
     @trainer.on(Events.EPOCH_COMPLETED)
     def run_validation(engine):
         evaluator.run(loaders['devel'])
-    
-    early_stopping = EarlyStopping(
-        patience=8,
-        score_function=lambda engine: -engine.state.metrics['loss'],
-        trainer=trainer
-    )
-    evaluator.add_event_handler(Events.COMPLETED, early_stopping)
+    #if early_stopping_bool:
+    #    early_stopping = EarlyStopping(
+    #        patience=early_stopping_parameter,
+    #        score_function=lambda engine: -engine.state.metrics['loss'],
+    #        trainer=trainer
+    #    )
+    #    evaluator.add_event_handler(Events.COMPLETED, early_stopping)
     
     # Log when early stopping triggers
-    @trainer.on(Events.TERMINATE)
-    def log_early_stop(engine):
-        logging.info(f"Early stopping triggered at epoch {engine.state.epoch}")
+    #@trainer.on(Events.TERMINATE)
+    #def log_early_stop(engine):
+    #    logging.info(f"Early stopping triggered at epoch {engine.state.epoch}")
 
     @trainer.on(Events.ITERATION_COMPLETED)
     def clip_gradients(engine):
