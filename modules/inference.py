@@ -258,7 +258,7 @@ def main(
     # Transforming the dataset to the proper cutout size
     T = None
     if crop:
-        T = K.CenterCrop(cutout_size)
+        T = K.CenterCrop((cutout_size, cutout_size))
 
     # Test
 
