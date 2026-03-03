@@ -18,7 +18,7 @@ from cnn import model_factory, model_stats, save_trained_model
 from create_trainer import create_trainer, create_transfer_learner
 from utils import discover_devices, specify_dropout_rate
 from train_utils import GPUAugmentation
-from ignite.handling import EarlyStopping
+from ignite.handlers import EarlyStopping
 
 
 import random
