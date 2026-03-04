@@ -23,7 +23,8 @@ def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=T
 
     if use_scheduler:
         #torch_lr_scheduler = CosineAnnealingLR(optimizer, T_max=40)
-        scheduler = ReduceLROnPlateau(optimizer, mode="min", patience = 8, threshold=1e-4, min_lr=1e-7)
+        #cheduler = ReduceLROnPlateau(optimizer, mode="min", patience = 8, threshold=1e-4, min_lr=1e-7)
+        scheduler = CosineAnnealingLR(optimizer, T_max = 15)
         #scheduler = LRScheduler(torch_lr_scheduler)
         #warmup_scheduler = LinearLR(optimizer, start_factor=0.1, total_iters=5)
         #cosine_scheduler = CosineAnnealingLR(optimizer, T_max=25)
