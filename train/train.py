@@ -44,7 +44,7 @@ So this variable should be specified accordingly""",
     "--model_type",
     type=click.Choice(
         [
-            "MergerNet", "merger_cnn"
+            "MergerNet", "merger_cnn", "resnet"
         ],
         case_sensitive=False,
     ),

@@ -21,7 +21,7 @@ def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=T
     )
 
     if use_scheduler:
-        torch_lr_scheduler = CosineAnnealingLR(optimizer, T_max=25)
+        torch_lr_scheduler = CosineAnnealingLR(optimizer, T_max=30)
         #scheduler = LRScheduler(torch_lr_scheduler)
         #warmup_scheduler = LinearLR(optimizer, start_factor=0.1, total_iters=5)
         #cosine_scheduler = CosineAnnealingLR(optimizer, T_max=25)
