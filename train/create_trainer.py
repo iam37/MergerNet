@@ -83,8 +83,8 @@ def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=T
         return optimizer.param_groups[0]['lr']
 
     # Define training hooks
-    #if use_scheduler:
-    #    trainer.add_event_handler(Events.ITERATION_STARTED, scheduler)
+    if use_scheduler:
+        trainer.add_event_handler(Events.ITERATION_STARTED, scheduler)
 
     @trainer.on(Events.STARTED)
     def log_results_start(trainer):
@@ -104,30 +104,30 @@ def create_trainer(model, optimizer, criterion, loaders, device, use_scheduler=T
     def run_validation(engine):
         evaluator.run(loaders['devel'])
         
-    @trainer.on(Events.EPOCH_COMPLETED)
-    def log_and_schedule(trainer):
-        # Run validation
-        evaluator.run(loaders['devel'])
-        
-        # Get validation loss
-        val_loss = evaluator.state.metrics['loss']
-        
-        
-        if scheduler is not None:
-            scheduler.step(val_loss)
-        
-        # Log all metrics
-        for L, loader in loaders.items():
-            log_metrics(trainer, loader, log_prefix=f"{L}_")
-        
-        # Log LR and epoch info
-        current_lr = get_current_lr(optimizer)
-        wandb.log({
-            "lr": current_lr,
-            "epoch": trainer.state.epoch,
-            "devel_loss": val_loss
-        })
-        logging.info(f"Epoch {trainer.state.epoch}: Val Loss = {val_loss:.4f}, LR = {current_lr:.6e}")
+    #@trainer.on(Events.EPOCH_COMPLETED)
+    #def log_and_schedule(trainer):
+    #    # Run validation
+    #    evaluator.run(loaders['devel'])
+    #    
+    #    # Get validation loss
+    #    val_loss = evaluator.state.metrics['loss']
+    #    
+    #    
+    #    if scheduler is not None:
+    #        scheduler.step(val_loss)
+    #    
+    #    # Log all metrics
+    #    for L, loader in loaders.items():
+    #        log_metrics(trainer, loader, log_prefix=f"{L}_")
+    #    
+    #    # Log LR and epoch info
+    #    current_lr = get_current_lr(optimizer)
+    #    wandb.log({
+    #        "lr": current_lr,
+    #        "epoch": trainer.state.epoch,
+    #        "devel_loss": val_loss
+    #    })
+    #    logging.info(f"Epoch {trainer.state.epoch}: Val Loss = {val_loss:.4f}, LR = {current_lr:.6e}")
     #if early_stopping_bool:
     #    early_stopping = EarlyStopping(
     #        patience=early_stopping_parameter,
