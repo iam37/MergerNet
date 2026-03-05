@@ -19,6 +19,18 @@ from utils import (
     load_data_dir
 )
 
+def crop_center(img, cropx, cropy):
+    
+    #Function from 
+    #https://stackoverflow.com/questions/39382412/crop-center-portion-of-a-numpy-image
+    
+    y, x, *_ = img.shape
+    startx = x // 2 - (cropx // 2)
+    #print(startx)
+    starty = y // 2 - (cropy // 2) 
+    #print(starty)
+    return img[starty:starty + cropy, startx:startx + cropx, ...]
+
 
 def predict(
     model_path,
