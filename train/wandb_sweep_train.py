@@ -27,13 +27,13 @@ sweep_config = {
     "method": "bayes",
     "metric": {"goal": "maximize", "name": "devel_accuracy"},
     "parameters": {
-        "learning_rate": {"values": [0.001, 0.0001, 0.0005]},
-        "momentum": {"values": [1e-4, 1e-5, 1e-6]},
+        "learning_rate": {"values": [0.001, 0.0001, 0.0005, 1e-5, 1e-7]},
+        "momentum": {"values": [0.9, 0.6, 0.2, 0.01]},
         "nesterov": {"values": [True, False]},
         "weight_decay": {"values": [1e-1, 1e-2, 1e-3]},
-        "epochs": {"values": [10, 15, 20]},
-        "batch_size": {"values": [16, 32, 64]},
-        "dropout_rate": {"values": [0, 0.2, 0.3, 0.4, 0.5]},
+        "epochs": {"values": [30, 40, 50, 60]},
+        "batch_size": {"values": [16, 32, 64. 128]},
+        "dropout_rate": {"values": [0.0, 0.2, 0.3, 0.4, 0.5]},
         "scheduler": {"values": [True, False]}
     },
     "early_terminate": {
@@ -79,7 +79,7 @@ def reset_wandb_env():
 
 @click.command()
 @click.option("--experiment_name", type=str, default="demo")
-@click.option("--entity", type=str, default="dragon_merger_agn")
+@click.option("--entity", type=str, default="jwst_psb_merger")
 @click.option("--n_sweeps", type=int, default=12)
 @click.option(
     "--run_id",
@@ -99,12 +99,12 @@ So this variable should be specified accordingly""",
     "--model_type",
     type=click.Choice(
         [
-            "dragon",
-            "resnet"
+            "MergerNet",
+            "merger_cnn"
         ],
         case_sensitive=False,
     ),
-    default="dragon",
+    default="merger_cnn",
 )
 @click.option("--model_state", type=click.Path(exists=True), default=None)
 @click.option("--data_dir", type=click.Path(exists=True), required=True)
@@ -117,7 +117,7 @@ devel/test sets. Balanced/Unbalanced refer to whether selecting
 equal number of images from each class. xs, sm, lg, dev all refer
 to what fraction is picked for train/devel/test.""",
 )
-@click.option("--cutout_size", type=int, default=167)
+@click.option("--cutout_size", type=int, default=150)
 @click.option("--channels", type=int, default=1)
 @click.option(
     "--n_workers",
@@ -181,7 +181,7 @@ def sweep_init(**kwargs):
     # Select the desired transforms
     T = None
     if args["crop"]:
-        T = K.CenterCrop(args["cutout_size"])
+        T = K.CenterCrop((args["cutout_size"], args['cutout_size']))
 
     # Generate the DataLoaders and log the train/devel/test split sizes
     splits = ("train", "devel", "test")
