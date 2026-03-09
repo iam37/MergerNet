@@ -32,7 +32,7 @@ sweep_config = {
         "nesterov": {"values": [True, False]},
         "weight_decay": {"values": [1e-1, 1e-2, 1e-3]},
         "epochs": {"values": [30, 40, 50, 60]},
-        "batch_size": {"values": [16, 32, 64. 128]},
+        "batch_size": {"values": [16, 32, 64, 128]},
         "dropout_rate": {"values": [0.0, 0.2, 0.3, 0.4, 0.5]},
         "scheduler": {"values": [True, False]}
     },
@@ -122,7 +122,7 @@ to what fraction is picked for train/devel/test.""",
 @click.option(
     "--n_workers",
     type=int,
-    default=4,
+    default=0,
     help="""The number of workers to be used during the
 data_preprocessing loading process.""",
 )
