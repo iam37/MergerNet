@@ -253,16 +253,20 @@ def sweep_init(**kwargs):
 
         for p in processes:
             p.join()  # Thread join to wait for each to finish execution.
+            
+    else:
+        logging.info("Running single agent sweep.")
+        wandb.agent(**p_args)
 
     # Housekeeping
-    sweep_path = f'{args["entity"]}/{args["experiment_name"]}/{sweep_id}'
-    sweep_list = ['wandb', 'sweep', '--cancel', sweep_path]
-    try:
-        result = subprocess.run(" ".join(sweep_list), shell=True)
-        logging.info(f"All runs on sweep ID {sweep_id} have terminated and sweep is now canceled.")
-        logging.info(result.stdout)
-    except subprocess.CalledProcessError as e:
-        logging.error(f"ERROR: Failed to cancel sweep {sweep_id}: {e}")
+    #sweep_path = f'{args["entity"]}/{args["experiment_name"]}/{sweep_id}'
+    #sweep_list = ['wandb', 'sweep', '--cancel', sweep_path]
+    #try:
+    #    result = subprocess.run(" ".join(sweep_list), shell=True)
+    #    logging.info(f"All runs on sweep ID {sweep_id} have terminated and sweep is now canceled.")
+    #    logging.info(result.stdout)
+    #except subprocess.CalledProcessError as e:
+    #    logging.error(f"ERROR: Failed to cancel sweep {sweep_id}: {e}")
 
     return
 
