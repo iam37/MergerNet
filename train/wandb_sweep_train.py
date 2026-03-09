@@ -340,7 +340,7 @@ def train(model_cls, datasets, criterion, args):
         # Set up trainer
         if args["train"]:
             logging.info("Creating trainer...")
-            trainer = create_trainer(
+            trainer, evaluator = create_trainer(
                 model, optimizer, criterion, loaders, args["device"], wandb.config.scheduler
             )
         else:
