@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import click
 import logging
+import os
 
 import torch
 import torch.nn as nn
@@ -312,7 +313,7 @@ def main(
         catalog["predicted_labels"] = preds
         catalog["predicted_confidence"] = cis  # Writing probabilities.
 
-        cat_path = output_path + f"inf_{run_num}.csv"
+        cat_path = output_path + f"{os.path.basename(model_path)}_inf_{run_num}.csv"
         logging.info(f"Catalog saved to {cat_path}")
         catalog.to_csv(cat_path, index=False)
 
