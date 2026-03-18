@@ -2,6 +2,7 @@
 import click
 import logging
 import os
+import sys
 
 conda_env_path = "/home/hpc/hpcguest8/.conda/envs/machine_learn"
 sys.path.insert(0, f"{conda_env_path}/lib/python3.11/site-packages")
