@@ -114,12 +114,13 @@ def calculate_morphology(img, psf, idx):
         # print(f"[{i}] no valid label")
         # psb_morphologies.append(-1)
         #psb_ids.append(idx)
-    gal_morphs = statmorph.SourceMorphology(img, segmap, label_main, weightmap = masked_err_map, verbose=False, psf = psf, cutout_extent = 2.0)
+    gal_morphs = statmorph.SourceMorphology(img, segmap, label_main, verbose=False, psf = psf, cutout_extent = 2.0)
     return gal_morphs, idx
 if __name__ == "__main__":
     log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=log_fmt)
     with warnings.catch_warnings():
+        logging.info("Accessing NIRCam PSF")
         nircam = stpsf.NIRCam()
         nircam.image_mask= None
         nircam.pupil_mask = None
@@ -132,7 +133,7 @@ if __name__ == "__main__":
         ext = 'DET_DIST'
         psf = psf_array[ext].data
         psf = crop_center(psf, 159, 159)
-        idexes = []
+        indexes = []
         for image in tqdm(glob.glob(f"../CEERS_Sim_images/F200W/active_mergers_low_z/train_data/*.fits")):
             try:
                 img = fits.getdata(image, memmap=False)
