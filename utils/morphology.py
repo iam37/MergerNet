@@ -24,6 +24,7 @@ from photutils.segmentation import detect_threshold, detect_sources
 from photutils.background import Background2D
 from statmorph.utils.image_diagnostics import make_figure
 import logging
+from photutils.segmentation import SourceFinder
 
 def crop_center(img, cropx, cropy):
     
