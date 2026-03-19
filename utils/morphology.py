@@ -37,6 +37,30 @@ def crop_center(img, cropx, cropy):
     #print(starty)
     return img[starty:starty + cropy, startx:startx + cropx, ...]
 
+def pick_main_label(segm, img_sub, prefer='largest'):
+    """Return the label to analyze."""
+    if segm is None or segm.nlabels == 0:
+        return None
+    if prefer == 'largest':
+        areas = segm.areas
+        return segm.labels[int(np.argmax(areas))]
+    # else nearest center
+    ys, xs = np.indices(img_sub.shape)
+    cy, cx = (img_sub.shape[0]-1)/2, (img_sub.shape[1]-1)/2
+    # compute centroid per label quickly using segm properties
+    # (coarse: use mean of coordinates within label mask)
+    best_label, best_d2 = None, np.inf
+    for lab in segm.labels:
+        mask = segm.data == lab
+        if mask.sum() == 0:
+            continue
+        ybar = ys[mask].mean()
+        xbar = xs[mask].mean()
+        d2 = (ybar-cy)**2 + (xbar-cx)**2
+        if d2 < best_d2:
+            best_label, best_d2 = lab, d2
+    return best_label
+
 def calculate_morphology(img, psf, idx):
     img = img.astype(img.dtype.newbyteorder("="))
     #bad = ~np.isfinite(err_map) | (err_map <= 0)
@@ -90,7 +114,6 @@ def calculate_morphology(img, psf, idx):
         # print(f"[{i}] no valid label")
         # psb_morphologies.append(-1)
         #psb_ids.append(idx)
-        continue
     gal_morphs = statmorph.SourceMorphology(img, segmap, label_main, weightmap = masked_err_map, verbose=False, psf = psf, cutout_extent = 2.0)
     return gal_morphs, idx
 if __name__ == "__main__":
