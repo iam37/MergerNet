@@ -172,5 +172,5 @@ if __name__ == "__main__":
                 'r20': morph.r20
             })
     morph_df = pd.DataFrame(morph_data)
-
+    print(os.getcwd())
     morph_df.to_csv('../CEERS_Sim_images/F200W/active_mergers_low_z/morphology.csv', index=False)
