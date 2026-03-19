@@ -119,7 +119,7 @@ def calculate_morphology(img, psf, idx):
 if __name__ == "__main__":
     log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=log_fmt)
-    with warnings.catch_warning():
+    with warnings.catch_warnings():
         nircam = stpsf.NIRCam()
         nircam.image_mask= None
         nircam.pupil_mask = None
