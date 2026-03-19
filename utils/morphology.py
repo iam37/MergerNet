@@ -134,6 +134,7 @@ if __name__ == "__main__":
         psf = psf_array[ext].data
         psf = crop_center(psf, 159, 159)
         indexes = []
+        morphologies = []
         for image in tqdm(glob.glob(f"../CEERS_Sim_images/F200W/active_mergers_low_z/train_data/*.fits")):
             try:
                 img = fits.getdata(image, memmap=False)
