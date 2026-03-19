@@ -138,7 +138,7 @@ if __name__ == "__main__":
         psf = crop_center(psf, 159, 159)
         indexes = []
         morphologies = []
-        for image in tqdm(glob.glob(f"../CEERS_Sim_images/F200W/active_merger_low_z/train_data/*.fits")):
+        for image in tqdm(glob.glob(f"../CEERS_Sim_images/F200W/non_merger_t_1.5_low_z/train_data/*.fits")):
             try:
                 img = fits.getdata(image, memmap=False)
                 idx = os.path.basename(image)
@@ -176,4 +176,4 @@ if __name__ == "__main__":
             })
     morph_df = pd.DataFrame(morph_data)
     print(os.getcwd())
-    morph_df.to_csv('../CEERS_Sim_images/F200W/active_merger_low_z/morphology.csv', index=False)
+    morph_df.to_csv('../CEERS_Sim_images/F200W/non_merger_t_1.5_low_z/morphology.csv', index=False)
