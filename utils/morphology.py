@@ -64,6 +64,8 @@ def pick_main_label(segm, img_sub, prefer='largest'):
 
 def calculate_morphology(img, psf, idx):
     img = img.astype(img.dtype.newbyteorder("="))
+    
+    gain = np.mean(img)/np.std(img)**2
     #bad = ~np.isfinite(err_map) | (err_map <= 0)
     #masked_img = img.copy()
     #masked_img[bad] = 0.0
@@ -115,7 +117,7 @@ def calculate_morphology(img, psf, idx):
         # print(f"[{i}] no valid label")
         # psb_morphologies.append(-1)
         #psb_ids.append(idx)
-    gal_morphs = statmorph.SourceMorphology(img, segmap, label_main, verbose=False, psf = psf, cutout_extent = 2.0)
+    gal_morphs = statmorph.SourceMorphology(img, segmap, label_main, verbose=False, psf = psf, gain = gain, cutout_extent = 10.0)
     return gal_morphs, idx
 if __name__ == "__main__":
     log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
