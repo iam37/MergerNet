@@ -120,7 +120,7 @@ if __name__ == "__main__":
             except ValueError as e:
                 print(f"[{idx}] ValueError: {e}")
                 psb_ids.append(idx)
-            continue
+                continue
             except ZeroDivisionError as e:
                 print(f"{idx} ran into: {e}, skipping...")
                 continue
