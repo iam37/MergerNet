@@ -23,17 +23,45 @@ import logging
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 mp.set_sharing_strategy("file_system")
 
+#def crop_center(img, cropx, cropy):
+#    
+#    #Function from 
+#    #https://stackoverflow.com/questions/39382412/crop-center-portion-of-a-numpy-image
+#    
+#    y, x, *_ = img.shape
+#    startx = x // 2 - (cropx // 2)
+#    #print(startx)
+#    starty = y // 2 - (cropy // 2) 
+#    #print(starty)
+#    return img[starty:starty + cropy, startx:startx + cropx, ...]
+
 def crop_center(img, cropx, cropy):
+    """
+    Crop center portion of image.
+    Handles both [H, W] and [H, W, C] formats.
+    """
+    if img.ndim == 2:
+        # Single channel [H, W]
+        y, x = img.shape
+        startx = x // 2 - (cropx // 2)
+        starty = y // 2 - (cropy // 2)
+        return img[starty:starty + cropy, startx:startx + cropx]
     
-    #Function from 
-    #https://stackoverflow.com/questions/39382412/crop-center-portion-of-a-numpy-image
+    elif img.ndim == 3:
+        # Check format
+        if img.shape[2] < img.shape[0]:  # [H, W, C]
+            y, x, c = img.shape
+            startx = x // 2 - (cropx // 2)
+            starty = y // 2 - (cropy // 2)
+            return img[starty:starty + cropy, startx:startx + cropx, :]
+        else:  # [C, H, W]
+            c, y, x = img.shape
+            startx = x // 2 - (cropx // 2)
+            starty = y // 2 - (cropy // 2)
+            return img[:, starty:starty + cropy, startx:startx + cropx]
     
-    y, x, *_ = img.shape
-    startx = x // 2 - (cropx // 2)
-    #print(startx)
-    starty = y // 2 - (cropy // 2) 
-    #print(starty)
-    return img[starty:starty + cropy, startx:startx + cropx, ...]
+    else:
+        raise ValueError(f"Unexpected image shape: {img.shape}")
 
 
 class FITSDataset(Dataset):
