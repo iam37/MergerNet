@@ -85,6 +85,6 @@ def make_salience_map(model, image_path):
     
     print(f"Fixed shape: {image.shape}")
     
-    salience_map, pred_class = gradcam(image_tensor)
+    salience_map, pred_class = gradcam(image)
     
     return salience_map, pred_class
