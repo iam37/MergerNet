@@ -52,7 +52,7 @@ class GradCAM:
         cam = (weights * self.activations).sum(dim=1, keepdim=True)  # [1, 1, H', W']
         
         # ReLU (only positive contributions)
-        cam = F.relu(cam)
+        cam = F.leaky_relu(cam)
         
         # Upsample to input size
         cam = F.interpolate(cam, size=image.shape[2:], mode='bilinear', align_corners=False)
