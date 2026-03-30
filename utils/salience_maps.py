@@ -1,6 +1,7 @@
 import numpy as np
 import torch.functional as F
 import matplotlib.pyplot as plt
+import torch
 
 class GradCAM:
     def __init__(self, model, target_layer):
