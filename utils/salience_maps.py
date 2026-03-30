@@ -66,7 +66,23 @@ def make_salience_map(model, image_path):
     target_layer = model.layer8 # last layer for the MergerCNN architecture. MAKE FUNCTIONALITY TO INPUT LAYER LATER
     gradcam = GradCAM(model, target_layer)
     image_tensor = torch.load(f"{image_path}.pt")
-    print(np.shape(image_tensor))
+    image = torch.load(image_path, map_location='cpu')
+    
+    print(f"Loaded shape: {image.shape}")
+    
+    if image.ndim == 3:
+        # Check if it's [H, W, C] or [C, H, W]
+        if image.shape[2] == 3 or image.shape[2] == 1:  # Likely [H, W, C]
+            image = image.permute(2, 0, 1)  # → [C, H, W]
+        # else: already [C, H, W]
+    elif image.ndim == 2:
+        # Single channel [H, W] → [1, H, W]
+        image = image.unsqueeze(0)
+    
+    if image.ndim == 3:
+        image = image.unsqueeze(0)
+    
+    print(f"Fixed shape: {image.shape}")
     
     salience_map, pred_class = gradcam(image_tensor)
     
