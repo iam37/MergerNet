@@ -35,6 +35,7 @@ class GradCAM:
         image.requires_grad = True
         
         # Forward pass
+        print(np.shape(image))
         output = self.model(image)
         
         if target_class is None:
