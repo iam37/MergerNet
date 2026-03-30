@@ -35,7 +35,7 @@ class GradCAM:
         image.requires_grad = True
         
         # Forward pass
-        print(np.shape(image))
+        #print(np.shape(image))
         output = self.model(image)
         
         if target_class is None:
@@ -69,7 +69,7 @@ def make_salience_map(model, image_path):
     image_tensor = torch.load(f"{image_path}.pt")
     image = torch.load(f"{image_path}.pt", map_location='cpu')
     
-    print(f"Loaded shape: {image.shape}")
+    #print(f"Loaded shape: {image.shape}")
     
     if image.ndim == 3:
         # Check if it's [H, W, C] or [C, H, W]
@@ -83,7 +83,7 @@ def make_salience_map(model, image_path):
     if image.ndim == 3:
         image = image.unsqueeze(0)
     
-    print(f"Fixed shape: {image.shape}")
+    #print(f"Fixed shape: {image.shape}")
     
     salience_map, pred_class = gradcam(image)
     
