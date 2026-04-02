@@ -107,6 +107,8 @@ class FITSDataset(Dataset):
         # Define paths
         self.data_info = load_data_dir(self.data_dir, slug, split)
         self.filenames = np.asarray(self.data_info["file_name"])
+        
+        shuffle = True
 
         # Loading labels if for training, not if for inference.
         if load_labels:
@@ -121,6 +123,14 @@ class FITSDataset(Dataset):
 
             # Declare number of classes automatically
             self.num_classes = np.unique(self.labels) if num_classes is None else num_classes
+            
+            if shuffle:
+                np.random.seed(seed)
+                shuffle_indices = np.random.permutation(len(self.filenames))
+                self.filenames = self.filenames[shuffle_indices]
+                self.labels = self.labels[shuffle_indices]
+                logging.info(f"Data shuffled with seed {seed}")
+            
         else:
             # generate fake labels of appropriate shape
             self.labels = np.ones((len(self.data_info), len(label_col)))  # Double check
@@ -167,7 +177,7 @@ class FITSDataset(Dataset):
 
         self.sampler = None
         if dist.is_available() and dist.is_initialized():
-            self.sampler = DistributedSampler(self, num_replicas=dist.get_world_size(), rank=dist.get_rank())
+            self.sampler = DistributedSampler(self, num_replicas=dist.get_world_size(), rank=dist.get_rank(), shuffle=True)
 
     def __getitem__(self, index):
         """Magic method to index into the dataset."""

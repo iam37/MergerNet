@@ -64,7 +64,7 @@ class GradCAM:
         return cam, target_class
     
 def make_salience_map(model, image_path):
-    target_layer = model.layer4 # last layer for the MergerCNN architecture. MAKE FUNCTIONALITY TO INPUT LAYER LATER
+    target_layer = model.layer1 # last layer for the MergerCNN architecture. MAKE FUNCTIONALITY TO INPUT LAYER LATER
     gradcam = GradCAM(model, target_layer)
     image_tensor = torch.load(f"{image_path}.pt")
     image = torch.load(f"{image_path}.pt", map_location='cpu')
