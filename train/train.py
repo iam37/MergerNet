@@ -202,6 +202,7 @@ def train(**kwargs):
         get_data_loader,
         batch_size=args["batch_size"],
         n_workers=args["n_workers"],
+        shuffle=True
         #n_workers = 1
     )
 

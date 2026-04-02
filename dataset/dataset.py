@@ -125,7 +125,7 @@ class FITSDataset(Dataset):
             self.num_classes = np.unique(self.labels) if num_classes is None else num_classes
             
             if shuffle:
-                np.random.seed(seed)
+                np.random.seed(42)
                 shuffle_indices = np.random.permutation(len(self.filenames))
                 self.filenames = self.filenames[shuffle_indices]
                 self.labels = self.labels[shuffle_indices]
