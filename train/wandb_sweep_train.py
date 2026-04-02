@@ -27,8 +27,8 @@ sweep_config = {
     "method": "bayes",
     "metric": {"goal": "maximize", "name": "devel_accuracy"},
     "parameters": {
-        #"learning_rate": {"values": [0.001, 0.0001, 0.0005, 1e-5, 1e-7]},
-        "learning_rate": {"values":[0.001, 0.0005, 0.001]}, 
+        "learning_rate": {"values": [0.001, 0.0001, 0.0005, 1e-5, 1e-7]},
+        #"learning_rate": {"values":[0.001, 0.0005, 0.001]}, 
         "momentum": {"values": [0.9, 0.6, 0.2, 0.01]},
         "nesterov": {"values": [True, False]},
         "weight_decay": {"values": [1e-1, 1e-2, 1e-3]},
