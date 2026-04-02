@@ -129,7 +129,7 @@ class FITSDataset(Dataset):
                 shuffle_indices = np.random.permutation(len(self.filenames))
                 self.filenames = self.filenames[shuffle_indices]
                 self.labels = self.labels[shuffle_indices]
-                logging.info(f"Data shuffled with seed {seed}")
+                logging.info(f"Data shuffled with seed {42}")
             
         else:
             # generate fake labels of appropriate shape
