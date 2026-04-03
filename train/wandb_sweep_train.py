@@ -169,6 +169,11 @@ to the cutout_size parameter""",
     help="""Specifies whether you wish to do transfer learning. If transfer learning,
     you must specify model path in the model_state argument."""
 )
+@click.option(
+    "--expand_factor", 
+    type=int,
+    default=1
+)
 def sweep_init(**kwargs):
     # Copy and log args
     args = {k: v for k, v in kwargs.items()}
@@ -197,6 +202,7 @@ def sweep_init(**kwargs):
             split=k,
             force_reload=args["force_reload"],
             num_classes=args["n_classes"]
+            expand_factor=args['expand_data']
         )
         for k in splits
     }
