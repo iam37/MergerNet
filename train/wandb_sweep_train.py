@@ -203,7 +203,7 @@ def sweep_init(**kwargs):
             split=k,
             force_reload=args["force_reload"],
             num_classes=args["n_classes"],
-            expand_factor=args['expand_data']
+            expand_factor=args['expand_factor']
         )
         for k in splits
     }
