@@ -4,6 +4,7 @@ import logging
 import math
 from pathlib import Path
 from functools import partial
+import numpy as np
 
 import wandb
 import os
@@ -27,11 +28,11 @@ sweep_config = {
     "method": "bayes",
     "metric": {"goal": "maximize", "name": "devel_accuracy"},
     "parameters": {
-        "learning_rate": {"values": [0.001, 0.0001, 0.0005, 1e-5, 1e-7]},
+        "learning_rate": {"values": np.linspace(1e-2, 1e-6, 12)},
         #"learning_rate": {"values":[0.001, 0.0005, 0.001]}, 
         "momentum": {"values": [0.9, 0.6, 0.2, 0.01]},
         "nesterov": {"values": [True, False]},
-        "weight_decay": {"values": [1e-1, 1e-2, 1e-3]},
+        "weight_decay": {"values": [0.4, 1e-1, 1e-2, 1e-3]},
         "epochs": {"values": [30, 40, 50, 60]},
         "batch_size": {"values": [16, 32, 64, 128]},
         "dropout_rate": {"values": [0.0, 0.2, 0.3, 0.4, 0.5]},
@@ -201,7 +202,7 @@ def sweep_init(**kwargs):
             transforms=T,
             split=k,
             force_reload=args["force_reload"],
-            num_classes=args["n_classes"]
+            num_classes=args["n_classes"],
             expand_factor=args['expand_data']
         )
         for k in splits
