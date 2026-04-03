@@ -162,11 +162,11 @@ class FITSDataset(Dataset):
         logging.info("Preloading PyTorch tensors before transfer...")
         filepaths = [fl.replace('/', '_') if '/' in fl else fl for fl in self.filenames]  # Flatten
         load_fn = partial(load_tensor, tensors_path=self.tensors_path)
-        self.observations = []
+        self.base_observations = []
         for i, filepath in enumerate(tqdm(filepaths, desc="Loading tensors")):
             # Load tensor
             tensor = load_tensor(filepath, tensors_path=self.tensors_path)
-            self.observations.append(tensor)
+            self.base_observations.append(tensor)
             
         if self.expand_factor > 1:
             logging.info(f"Expanding dataset by factor of {self.expand_factor} with augmentations...")
