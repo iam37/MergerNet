@@ -194,8 +194,9 @@ class FITSDataset(Dataset):
                         # Keep first copy as original (no augmentation)
                         augmented_obs = obs
                     else:
-                        # Apply random augmentations to subsequent copies
-                        augmented_obs = augmentation_transform(obs)
+                        obs_batched = obs.unsqueeze(0)  # (C, H, W) -> (1, C, H, W)
+                        augmented_batched = augmentation_transform(obs_batched)
+                        augmented_obs = augmented_batched.squeeze(0)  # (1, C, H, W) -> (C, H, W)
                     
                     self.observations.append(augmented_obs)
                     expanded_labels.append(label)
