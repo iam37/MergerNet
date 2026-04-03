@@ -10,6 +10,8 @@ from torch.utils.data import Dataset
 import torch.multiprocessing as mp
 import torch.distributed as dist
 from torch.utils.data.distributed import DistributedSampler
+from torchvision import transforms as T
+
 
 from utils import (
     load_tensor,
@@ -170,10 +172,10 @@ class FITSDataset(Dataset):
             logging.info(f"Expanding dataset by factor of {self.expand_factor} with augmentations...")
             
             # Define augmentation transforms (random flips and rotations)
-            augmentation_transform = transforms.Compose([
-                transforms.RandomHorizontalFlip(p=0.5),
-                transforms.RandomVerticalFlip(p=0.5),
-                transforms.RandomRotation(degrees=180),
+            augmentation_transform = T.Compose([
+                T.RandomHorizontalFlip(p=0.5),
+                T.RandomVerticalFlip(p=0.5),
+                T.RandomRotation(degrees=180),
             ])
             
             self.observations = []
