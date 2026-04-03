@@ -165,6 +165,53 @@ class FITSDataset(Dataset):
             # Load tensor
             tensor = load_tensor(filepath, tensors_path=self.tensors_path)
             self.observations.append(tensor)
+            
+        if self.expand_factor > 1:
+            logging.info(f"Expanding dataset by factor of {self.expand_factor} with augmentations...")
+            
+            # Define augmentation transforms (random flips and rotations)
+            augmentation_transform = transforms.Compose([
+                transforms.RandomHorizontalFlip(p=0.5),
+                transforms.RandomVerticalFlip(p=0.5),
+                transforms.RandomRotation(degrees=180),
+            ])
+            
+            self.observations = []
+            expanded_labels = []
+            expanded_filenames = []
+            
+            # For each original sample, create expand_factor versions
+            for obs, label, filename in tqdm(
+                zip(base_observations, self.labels, self.filenames),
+                desc="Augmenting dataset",
+                total=len(base_observations)
+            ):
+                for i in range(self.expand_factor):
+                    if i == 0:
+                        # Keep first copy as original (no augmentation)
+                        augmented_obs = obs
+                    else:
+                        # Apply random augmentations to subsequent copies
+                        augmented_obs = augmentation_transform(obs)
+                    
+                    self.observations.append(augmented_obs)
+                    expanded_labels.append(label)
+                    expanded_filenames.append(filename)
+            
+            self.labels = np.asarray(expanded_labels)
+            self.filenames = np.asarray(expanded_filenames)
+            logging.info(f"Dataset expanded from {len(base_observations)} to {len(self.observations)} samples")
+        else:
+            self.observations = base_observations
+        
+        # SHUFFLE after expansion so augmented versions are mixed
+        if load_labels:
+            np.random.seed(42)
+            shuffle_indices = np.random.permutation(len(self.observations))
+            self.observations = [self.observations[i] for i in shuffle_indices]
+            self.labels = self.labels[shuffle_indices]
+            self.filenames = self.filenames[shuffle_indices]
+            logging.info(f"Data shuffled with seed 42 (after expansion)")
 
         #with mp.Pool(min(n_workers, mp.cpu_count())) as p:
         #    # Load to NumPy, then convert to PyTorch (hack to solve system
