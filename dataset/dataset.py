@@ -166,6 +166,7 @@ class FITSDataset(Dataset):
         for i, filepath in enumerate(tqdm(filepaths, desc="Loading tensors")):
             # Load tensor
             tensor = load_tensor(filepath, tensors_path=self.tensors_path)
+            print(np.shape(tensor))
             self.base_observations.append(tensor)
             
         if self.expand_factor > 1:
