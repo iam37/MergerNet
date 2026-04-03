@@ -184,9 +184,9 @@ class FITSDataset(Dataset):
             
             # For each original sample, create expand_factor versions
             for obs, label, filename in tqdm(
-                zip(base_observations, self.labels, self.filenames),
+                zip(self.base_observations, self.labels, self.filenames),
                 desc="Augmenting dataset",
-                total=len(base_observations)
+                total=len(self.base_observations)
             ):
                 for i in range(self.expand_factor):
                     if i == 0:
@@ -202,9 +202,9 @@ class FITSDataset(Dataset):
             
             self.labels = np.asarray(expanded_labels)
             self.filenames = np.asarray(expanded_filenames)
-            logging.info(f"Dataset expanded from {len(base_observations)} to {len(self.observations)} samples")
+            logging.info(f"Dataset expanded from {len(self.base_observations)} to {len(self.observations)} samples")
         else:
-            self.observations = base_observations
+            self.observations = self.base_observations
         
         # SHUFFLE after expansion so augmented versions are mixed
         if load_labels:
