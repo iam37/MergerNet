@@ -210,12 +210,12 @@ class FITSDataset(Dataset):
         
         # SHUFFLE after expansion so augmented versions are mixed
         if load_labels:
-            np.random.seed(42)
+            #np.random.seed(42)
             shuffle_indices = np.random.permutation(len(self.observations))
             self.observations = [self.observations[i] for i in shuffle_indices]
             self.labels = self.labels[shuffle_indices]
             self.filenames = self.filenames[shuffle_indices]
-            logging.info(f"Data shuffled with seed 42 (after expansion)")
+            logging.info(f"Data shuffled (after expansion)")
 
         #with mp.Pool(min(n_workers, mp.cpu_count())) as p:
         #    # Load to NumPy, then convert to PyTorch (hack to solve system
