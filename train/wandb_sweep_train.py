@@ -28,12 +28,12 @@ sweep_config = {
     "method": "bayes",
     "metric": {"goal": "maximize", "name": "devel_accuracy"},
     "parameters": {
-        "learning_rate": {"values": [0.001, 0.0001, 0.00001, 1e-5, 1e-6, 1e-7]},
+        "learning_rate": {"values": [0.005, 0.001, 0.0005, 0.0001, 0.00001]},
         #"learning_rate": {"values":[0.001, 0.0005, 0.001]}, 
         "momentum": {"values": [0.9, 0.6, 0.2, 0.01]},
         "nesterov": {"values": [True, False]},
         "weight_decay": {"values": [0.4, 1e-1, 1e-2, 1e-3]},
-        "epochs": {"values": [30, 40, 50, 60]},
+        "epochs": {"values": [30, 40, 50, 55]},
         "batch_size": {"values": [16, 32, 64, 128]},
         "dropout_rate": {"values": [0.0, 0.2, 0.3, 0.4, 0.5]},
         "scheduler": {"values": [True, False]}
