@@ -237,8 +237,8 @@ def train(**kwargs):
             transforms=T,
             split=k,
             num_classes=args["n_classes"],
-            #expand_factor=args["expand_data"] if k == "train" else 1,
-            expand_factor=args['expand_data'],
+            expand_factor=args["expand_data"] if k == "train" else 1,
+            #expand_factor=args['expand_data'],
             force_reload=args["force_reload"]
         )
         for k in splits
